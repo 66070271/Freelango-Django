@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Add Category — Freelango{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<main class="w-full flex justify-center py-28 px-6">
+  <div class="max-w-lg w-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl shadow-indigo-500/20 p-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">Add New Category</h1>
+    <p class="text-slate-300/80 text-center mb-10">
+      เพิ่มหมวดหมู่ใหม่ให้กับบริการในระบบ เพื่อให้ Freelancers สามารถเลือกได้อย่างเหมาะสม 🌌
+    </p>
+
+    <!-- 🔹 Form -->
+    <form action="{% url 'add_category' %}" method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Category Name -->
+      <div>
+        <label class="block text-sm mb-1 text-slate-200">Category Name</label>
+        {{ form.name }}
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm mb-1 text-slate-200">Description</label>
+        {{ form.description }}
+      </div>
+
+      
+
+      <!-- Submit Button -->
+      <div class="pt-4">
+        <button type="submit"
+          class="w-full py-3 rounded-2xl bg-gradient-to-tr from-indigo-500/90 via-violet-500/90 to-fuchsia-500/90 
+          text-white font-medium shadow-lg hover:opacity-95 transition">
+          Add Category
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}

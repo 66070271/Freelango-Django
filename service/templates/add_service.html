@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Edit Service — Freelango{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex justify-center py-28 px-6">
+  <div class="max-w-3xl w-full rounded-2xl border border-gray-200 bg-white shadow-md p-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Upload Your Service</h1>
+    <p class="text-gray-600 text-center mb-10">
+      แชร์บริการของคุณให้ลูกค้าเห็น และเริ่มสร้างรายได้ในจักรวาลของ Freelango 🚀
+    </p>
+
+    <!-- 🔹 Upload Service Form -->
+    <form action="{% url 'add_service' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Service Title -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Service Title</label>
+        <input type="text" name="title" placeholder="e.g. Modern Logo Design"
+          class="block w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none px-4 py-3 text-gray-800 placeholder:text-gray-400 transition">
+      </div>
+
+      <!-- Upload Image -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Cover Image</label>
+        <input type="file" name="image" accept="image/*" multiple
+          class="block w-full text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-indigo-700 transition">
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Price (USD)</label>
+        {{ form.price }}
+        {% if form.price.errors %}
+          {% for error in form.price.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Delivery Time -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Delivery Time (days)</label>
+        {{ form.delivery_time }}
+        {% if form.delivery_time.errors %}
+          {% for error in form.delivery_time.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Description</label>
+        {{ form.description }}
+      </div>
+
+      <!-- Category -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Category</label>
+        {{ form.categories }}
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-4">
+        <button type="submit"
+          class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md transition active:scale-[.98]">
+          Upload Service
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}

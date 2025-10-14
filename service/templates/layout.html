@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-gray-50 text-gray-800">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Freelango{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="light" />
+
+  <style>
+    /* ฟอนต์เรียบๆ อ่านง่าย */
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* ปรับ dropdown ให้ดูทันสมัย */
+    select {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <!-- Navbar -->
+{% include 'navbar.html' %}
+
+  <!-- Content -->
+  <main class="flex-1 w-full">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 bg-white py-6">
+    <div class="max-w-7xl mx-auto text-center text-sm text-gray-500">
+      © 2025 Freelango. All rights reserved by marttpq.
+    </div>
+  </footer>
+</body>
+
+</html>

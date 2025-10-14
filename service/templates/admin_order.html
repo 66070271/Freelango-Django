@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Admin — Order Management{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6">
+  <div class="max-w-6xl w-full bg-white border border-gray-200 rounded-2xl shadow-md p-10">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Order Management</h1>
+    </div>
+
+    {% if orders %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left border-collapse text-gray-700">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wider">
+              <th class="py-3 px-4">#</th>
+              <th class="py-3 px-4">Service</th>
+              <th class="py-3 px-4">Client</th>
+              <th class="py-3 px-4">Price</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Updated</th>
+              <th class="py-3 px-4 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+              <td class="py-3 px-4 text-gray-500">{{ forloop.counter }}</td>
+              <td class="py-3 px-4 font-semibold text-gray-900">{{ order.service.title }}</td>
+              <td class="py-3 px-4">{{ order.client.username }}</td>
+              <td class="py-3 px-4 text-gray-800">฿{{ order.price }}</td>
+              <td class="py-3 px-4">
+                {% if order.status == "pending" %}
+                  <span class="text-yellow-600 font-medium bg-yellow-100/80 px-2 py-1 rounded-md text-sm">Pending</span>
+                {% elif order.status == "cancelled" %}
+                  <span class="text-red-600 font-medium bg-red-100/80 px-2 py-1 rounded-md text-sm">Cancelled</span>
+                {% elif order.status == "confirmed" %}
+                  <span class="text-green-600 font-medium bg-green-100/80 px-2 py-1 rounded-md text-sm">Confirmed</span>
+                {% endif %}
+              </td>
+              <td class="py-3 px-4 text-gray-500">{{ order.updated_at|date:"M d, Y H:i" }}</td>
+              <td class="py-3 px-4 text-center space-x-2">
+                <a href="{% url 'order_detail' order.id %}"
+                   class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-sm">
+                   View
+                </a>
+                {% if order.payment.status == "paid" and order.status == "pending" %}
+                  <a href="{% url 'approve_payment' order.id %}"
+                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium shadow-sm">
+                     ✅ Approve Payment
+                  </a>
+                {% elif order.status == "cancelled" %}
+                  {% if order.payment.status == "confirmed" or order.payment.status == "paid" %}
+                  <a href="{% url 'approve_refund' order.id %}"
+                     class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium shadow-sm">
+                     ✅ Approve Refund
+                  </a>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-center text-gray-500 mt-6">No orders to manage.</p>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

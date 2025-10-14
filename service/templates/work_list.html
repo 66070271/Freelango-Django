@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}My Orders — Freelango{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6">
+  <div class="max-w-6xl w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-10 text-gray-800">
+    
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">My Works</h1>
+
+    {% if orders %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200 text-gray-600">
+              <th class="py-3 px-4 font-semibold">#</th>
+              <th class="py-3 px-4 font-semibold">Service</th>
+              <th class="py-3 px-4 font-semibold">Price</th>
+              <th class="py-3 px-4 font-semibold">Status</th>
+              <th class="py-3 px-4 font-semibold">Payment</th>
+              <th class="py-3 px-4 text-center font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+              <td class="py-3 px-4 text-gray-500">{{ forloop.counter }}</td>
+              <td class="py-3 px-4 font-medium text-gray-800">{{ order.service.title }}</td>
+              <td class="py-3 px-4 text-gray-700">฿{{ order.price }}</td>
+              <td class="py-3 px-4">
+                {% if order.status == "pending" %}
+                  <span class="text-yellow-600 font-medium">Pending</span>
+                {% elif order.status == "paid" %}
+                  <span class="text-green-600 font-medium">Paid</span>
+                {% elif order.status == "cancelled" %}
+                  <span class="text-red-600 font-medium">Cancelled</span>
+                {% else %}
+                  <span class="text-gray-500">{{ order.status|capfirst }}</span>
+                {% endif %}
+              </td>
+              <td class="py-3 px-4">
+                {% if order.payment %}
+                  {% if order.payment.status == "paid" %}
+                    <span class="text-green-600 font-medium">Paid</span>
+                  {% elif order.payment.status == "pending" %}
+                    <span class="text-yellow-600 font-medium">Pending</span>
+                  {% else %}
+                    <span class="text-red-600 font-medium">{{ order.payment.status|capfirst }}</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-gray-400">—</span>
+                {% endif %}
+              </td>
+
+              <td class="py-3 px-4 text-center">
+                <!-- ฟอร์ม action -->
+                <form method="POST" action="{% url 'work_action' order.id %}" class="flex flex-wrap justify-center gap-2">
+                  {% csrf_token %}
+
+                  <!-- View -->
+                  <a href="{% url 'order_detail' order.id %}" 
+                     class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition">
+                     View
+                  </a>
+
+                  {% if order.payment and order.payment.status == "confirmed" and order.status == "pending" %}
+                    <button type="submit" name="action" value="accept"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition">
+                      Accept
+                    </button>
+                    <button type="submit" name="action" value="cancel"
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition">
+                      Cancel
+                    </button>
+
+                  {% elif order.payment and order.payment.status == "confirmed" and order.status == "in_progress" %}
+                    <button type="submit" name="action" value="send"
+                            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-sm font-medium transition">
+                      Send
+                    </button>
+                    <button type="submit" name="action" value="finish"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition">
+                      Finish
+                    </button>
+
+                  {% elif order.payment and order.payment.status == "confirmed" and order.status == "completed" %}
+                    <p class="text-gray-500 text-sm italic">
+                      Waiting for client confirmation...
+                    </p>
+                  {% endif %}
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-center text-gray-500 mt-6">You have no orders yet.</p>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

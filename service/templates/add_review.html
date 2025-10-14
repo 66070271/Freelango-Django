@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Add Review — Freelango{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6 bg-gray-50">
+  <div class="max-w-3xl w-full bg-white border border-gray-200 rounded-2xl shadow-md p-10 text-gray-800">
+
+    <!-- Header -->
+    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+      Leave a Review
+    </h1>
+
+    <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Rating -->
+      <div>
+        <label for="id_rating" class="block mb-2 text-gray-700 font-medium">Rating</label>
+        {{ form.rating }}
+      </div>
+
+      <!-- Comment -->
+      <div>
+        <label for="id_comment" class="block mb-2 text-gray-700 font-medium">Comment</label>
+        {{ form.comment }}
+      </div>
+
+      <!-- Submit -->
+      <div class="flex justify-center">
+        <button type="submit"
+          class="px-6 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow-sm transition">
+          Submit Review
+        </button>
+      </div>
+    </form>
+
+  </div>
+</main>
+{% endblock %}

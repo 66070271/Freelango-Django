@@ -1,0 +1,35 @@
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("login", views.loginView, name="login"),
+    path("register", views.register, name="register"),
+    path("",views.home,name="home"),
+    path("logout",views.logoutView,name="logout"),
+    path("service/<int:pk>/",views.service_detail,name="service_detail"),
+    path("add_service",views.add_service,name="add_service"),
+    path("add_category",views.add_category,name="add_category"),
+    path("category_list",views.category_list,name="category_list"),
+    path("service/<int:pk>/delete/",views.delete_service,name="delete_service"),
+    path("service/<int:pk>/edit/",views.edit_service,name="edit_service"),
+    path("category/<int:pk>/edit",views.edit_category,name="edit_category"),
+    path("category/<int:pk>/delete",views.delete_category,name="delete_category"),
+    path("profile/<int:pk>/",views.profileView,name="profile_view"),
+    path("profile/<int:pk>/edit/",views.edit_profile,name="edit_profile"),
+    path("checkout/<int:pk>/",views.checkout_view,name="checkout"),
+    path("confirm_payment/<int:pk>/",views.confirm_payment,name="confirm_payment"),
+    path("order_list",views.order_list,name="order_list"),
+    path("order_detail/<int:pk>/",views.order_detail,name="order_detail"),
+    path("order/admin/",views.admin_order,name="admin_order"),
+    path("approve_payment/<int:pk>/",views.approve_payment,name = "approve_payment"),
+    path("approve_refund/<int:pk>/",views.approve_refund,name="approve_refund"),
+    path("work_list",views.work_list,name="work_list"),
+    path("work_action/<int:pk>/",views.work_action,name="work_action"),
+    path("confirm_work/<int:pk>/",views.confirm_work,name="confirm_work"),
+    path("add_review/<int:pk>/",views.add_review,name="add_review"),
+    path("delete_review/<int:pk>/",views.delete_review,name="delete_review"),
+    path("change_password",views.change_password,name="change_password"),
+    path("users/", views.user_list, name="user_list"),
+    path("users/delete/<int:pk>/", views.delete_user, name="delete_user"),
+]

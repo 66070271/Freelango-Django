@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Edit Profile — Freelango{% endblock %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-28 px-6">
+  <div class="max-w-4xl w-full rounded-2xl border border-gray-200 bg-white shadow-md p-10">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row items-center justify-between mb-10 w-full">
+      <div class="flex items-center gap-5">
+        <!-- Avatar -->
+        <div class="relative group">
+          <div class="h-24 w-24 rounded-xl border border-gray-200 overflow-hidden bg-gray-100">
+            {% if profile.image %}
+              <img id="profilePreview" src="{{ profile.image.url }}" alt="Profile Picture" class="w-full h-full object-cover">
+            {% else %}
+              <img id="profilePreview" src="{% static 'img/user.png' %}" alt="Default Avatar" class="w-full h-full object-cover opacity-80">
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{{ profile.user.get_full_name }}</h1>
+          <p class="text-gray-500 mt-1 text-sm">Edit your personal information</p>
+        </div>
+      </div>
+
+      <!-- Upload Image Button -->
+      {% if request.user.id == profile.user.id %}
+      <label for="id_avatar"
+             class="cursor-pointer mt-6 md:mt-0 inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+        Upload Image
+      </label>
+      {% endif %}
+    </div>
+
+    <!-- Profile Form -->
+    <form action="{% url 'edit_profile' user.id %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Firstname</label>
+          {{ user_form.first_name }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Lastname</label>
+          {{ user_form.last_name }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          {{ user_form.email }}
+          <p>{{ user_form.email.errors }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Birthday</label>
+          {{ profile_form.birthday }}
+          {{ profile_form.birthday.errors }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+          {{ profile_form.phone_number }}
+          <p>{{ profile_form.phone_number.errors }}</p>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+          {{ profile_form.address }}
+        </div>
+
+        <!-- Hidden Avatar Input -->
+        <input id="id_avatar" type="file" name="image" class="hidden" accept="image/*" onchange="previewImage(event)">
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-4 mt-10">
+        <a href="{% url 'profile_view' user.id %}"
+           class="px-6 py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition">
+          Cancel
+        </a>
+        {% if request.user.id == profile.user.id %}
+        <button type="submit"
+                class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition">
+          Save Changes
+        </button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const output = document.getElementById('profilePreview');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+</script>
+{% endblock %}

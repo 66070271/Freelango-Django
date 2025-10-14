@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Login — Freelango{% endblock %}
+{% block content %}
+
+  {% include 'navbar.html' %}
+
+  <!-- Main -->
+  <main class="pt-28 max-w-7xl mx-auto px-6">
+    {% if perms.service.add_service %} 
+      <a href="{% url 'add_service'%}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
+        Add Service +
+      </a>
+    {% endif %}
+    {% if perms.service.view_category %} 
+      <a href="{% url 'category_list'%}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
+        Categories
+      </a>
+    {% endif %}
+    {% if perms.service.approve_payment and perms.service.approve_refund %} 
+      <a href="{% url 'admin_order'%}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
+        Manage Orders
+      </a>
+    {% endif %}
+    {% if perms.service.delete_user %} 
+      <a href="{% url 'user_list'%}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
+        Manage Users
+      </a>
+    {% endif %}
+
+    <h1 class="text-4xl font-bold text-center mt-10 mb-12 text-gray-800">Our Services</h1>
+
+
+    <form method="get" class="max-w-md mx-auto mb-12 flex">
+    <input type="text" name="search" value="" placeholder="Search by service name..."
+      class="w-full rounded-l-lg border border-gray-300 bg-white text-gray-800 placeholder-gray-400 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+    <button type="submit"
+      class="px-5 py-2 rounded-r-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+      Search
+    </button>
+  </form>
+    <!-- Services grid -->
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {% for service in services %}
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition overflow-hidden">
+        {% if service.images.first %}
+          <img src="{{ service.images.first.image.url }}" class="h-48 w-full object-cover" alt="">
+        {% else %}
+          <img src="{% static 'img/noimg.webp' %}" class="h-48 w-full object-cover" alt="">
+        {% endif %}
+
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-800">{{ service.title }}</h3>
+          <p class="text-gray-500 text-sm mb-4 line-clamp-3">{{ service.description }}</p>
+
+          <div class="flex justify-between items-center">
+            <span class="text-indigo-600 font-bold">{{ service.price }}</span>
+            <a href="{% url 'service_detail' service.id %}"
+              class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
+              View
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+{% endblock %}

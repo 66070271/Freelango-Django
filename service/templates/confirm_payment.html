@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Confirm Payment — Freelango{% endblock %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6">
+  <div class="max-w-3xl w-full bg-white border border-gray-200 rounded-2xl shadow-md p-10 text-gray-800">
+    
+    <h1 class="text-3xl font-bold mb-8 text-center text-gray-900">Confirm Your Payment</h1>
+
+    <div class="text-center mb-8">
+      <p class="text-gray-700">Order ID: <span class="text-indigo-600 font-semibold">#{{ order.id }}</span></p>
+      <p class="text-gray-700">Amount: <span class="text-indigo-600 font-semibold">฿{{ order.price }}</span></p>
+      <p class="text-gray-500 mt-2">Please upload your payment slip or choose to upload it later.</p>
+    </div>
+
+    <!-- ฟอร์มอัปโหลดสลิป -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- ช่องอัปโหลด -->
+      <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-indigo-400 transition">
+        <img src="{% static 'img/upload_icon.svg' %}" alt="Upload Icon" class="w-12 h-12 opacity-70 mb-3">
+        <label class="cursor-pointer text-indigo-600 hover:text-indigo-500 font-medium">
+          <input type="file" name="slip" accept="image/*" class="hidden" onchange="showFileName(event)">
+          <span id="fileName">Choose your slip image</span>
+        </label>
+      </div>
+
+      <!-- ปุ่ม -->
+      <div class="flex flex-col sm:flex-row gap-4 mt-8">
+        <!-- อัปโหลดเลย -->
+        <button type="submit" name="action" value="upload_now"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition active:scale-[.98]">
+          Upload Slip Now
+        </button>
+
+        <!-- อัปโหลดทีหลัง -->
+        <button type="submit" name="action" value="upload_later"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-lg font-medium border border-gray-200 transition active:scale-[.98]">
+          Upload Later
+        </button>
+      </div>
+    </form>
+
+    <p class="text-center text-gray-500 text-sm mt-8">
+      You can always upload your slip later in your 
+      <a href="#" class="text-indigo-600 hover:underline">Order History</a>.
+    </p>
+
+  </div>
+</main>
+
+<script>
+function showFileName(event) {
+  const file = event.target.files[0];
+  const label = document.getElementById("fileName");
+  if (file) {
+    label.textContent = "📄 " + file.name;
+  } else {
+    label.textContent = "Choose your slip image";
+  }
+}
+</script>
+{% endblock %}

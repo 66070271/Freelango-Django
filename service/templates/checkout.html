@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Checkout — Freelango{% endblock %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6">
+  <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-2xl shadow-md p-10">
+    <h1 class="text-3xl font-bold mb-8 text-center text-gray-900">Confirm Your Order</h1>
+
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-10">
+      <!-- Service Image -->
+      {% if service.images.first.image %}
+        <div class="w-full md:w-1/2 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+          <img src="{{ service.images.first.image.url }}" alt="Service Preview" class="object-cover w-full h-full">
+        </div>
+      {% else %}
+        <div class="w-full md:w-1/2 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+          <img src="{% static 'img/noimg.webp' %}" alt="Service Preview" class="object-cover w-full h-full">
+        </div>
+      {% endif %}
+
+      <!-- Details -->
+      <div class="w-full md:w-1/2 space-y-4">
+        <h2 class="text-2xl font-semibold text-gray-900">{{ service.title }}</h2>
+        <p class="text-gray-600">{{ service.description }}</p>
+        <p class="text-indigo-600 text-lg font-medium mt-4">Price: ฿{{ service.price }}</p>
+
+        <!-- 🖼 Payment Method Info -->
+        <div id="qr-section" class="mt-6">
+          <h4 class="text-indigo-600 font-semibold mb-2">Scan QR to Pay</h4>
+          <img src="{{ bank.qr_image.url }}" alt="QR Payment"
+               class="w-48 h-48 border border-gray-200 rounded-lg mx-auto shadow-sm">
+          <p class="text-gray-500 text-sm text-center mt-2">Scan to pay with PromptPay</p>
+        </div>
+
+        <div id="transfer-section" class="mt-6 hidden">
+          <h4 class="text-indigo-600 font-semibold mb-2">Bank Transfer Details</h4>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-gray-700">
+            <p><strong>Bank:</strong> {{ bank.bank_name }}</p>
+            <p><strong>Account Name:</strong> {{ bank.account_name }}</p>
+            <p><strong>Account Number:</strong> {{ bank.account_number }}</p>
+          </div>
+          <p class="text-gray-500 text-sm mt-2 text-center">
+            After transfer, please upload your slip on the next page.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Form -->
+    <form action="{% url 'checkout' service.id %}" method="POST" class="mt-10">
+      {% csrf_token %}
+      <div class="text-gray-800">
+        <h3 class="font-semibold mb-3 text-lg">Select Payment Method</h3>
+        <div class="space-y-3">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="radio" name="payment_method" value="qr" checked
+                   class="accent-indigo-600 w-5 h-5">
+            <span>QR Code (PromptPay)</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="radio" name="payment_method" value="transfer"
+                   class="accent-indigo-600 w-5 h-5">
+            <span>Bank Transfer</span>
+          </label>
+        </div>
+
+        <button type="submit" onclick="return confirmOrder(event)"
+          class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition active:scale-[.98]">
+          Proceed to Payment
+        </button>
+      </div>
+    </form>
+
+    <div class="text-center text-gray-500 mt-10 text-sm">
+      <p>By continuing, you agree to our 
+        <a href="#" class="text-indigo-600 hover:underline">Terms of Service</a>.
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- ✅ Script -->
+<script>
+  const qrSection = document.getElementById("qr-section");
+  const transferSection = document.getElementById("transfer-section");
+  const radios = document.querySelectorAll('input[name="payment_method"]');
+
+  radios.forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      if (e.target.value === "qr") {
+        qrSection.classList.remove("hidden");
+        transferSection.classList.add("hidden");
+      } else {
+        qrSection.classList.add("hidden");
+        transferSection.classList.remove("hidden");
+      }
+    });
+  });
+
+  function confirmOrder(e) {
+    if (!confirm("⚠️ Do you want to confirm this order?")) {
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  }
+</script>
+{% endblock %}

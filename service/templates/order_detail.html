@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Order Detail — Freelango{% endblock %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<main class="w-full flex flex-col items-center justify-center py-24 px-6">
+  <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-2xl shadow-md p-10 text-gray-800">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Order #{{ order.id }}</h1>
+      <span class="px-4 py-1.5 rounded-lg text-sm font-semibold
+        {% if order.status == 'pending' %} bg-yellow-100 text-yellow-700
+        {% elif order.status == 'paid' %} bg-green-100 text-green-700
+        {% elif order.status == 'completed' %} bg-indigo-100 text-indigo-700
+        {% elif order.status == 'cancelled' %} bg-red-100 text-red-700
+        {% else %} bg-gray-100 text-gray-600 {% endif %}">
+        {{ order.status|capfirst }}
+      </span>
+    </div>
+
+    <!-- Service Info -->
+    <div class="grid md:grid-cols-2 gap-8 mb-10">
+      {% if order.service.images.first %}
+        <div class="rounded-xl overflow-hidden border border-gray-200">
+          <img src="{{ order.service.images.first.image.url }}" alt="Service Preview" class="w-full h-full object-cover">
+        </div>
+      {% else %}
+        <div class="rounded-xl overflow-hidden border border-gray-200">
+          <img src="{% static 'img/noimg.webp' %}" alt="Service Preview" class="w-full h-full object-cover">
+        </div>
+      {% endif %}
+      <div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">{{ order.service.title }}</h2>
+        <p class="text-gray-600 mb-4">{{ order.service.description }}</p>
+        <p class="text-indigo-600 text-lg font-medium mb-2">Price: ฿{{ order.price }}</p>
+        <p class="text-gray-500 text-sm">Ordered on: {{ order.created_at|date:"M d, Y H:i" }}</p>
+        <div class="mt-6">
+          <a href="{% url 'profile_view' order.service.freelancer.id %}"
+             class="inline-block px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition">
+            View Freelancer
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Info -->
+    <div class="mb-10">
+      <h3 class="text-xl font-semibold text-gray-900 mb-6">Payment Information</h3>
+      {% if payment %}
+        <div class="grid md:grid-cols-2 gap-8 items-start">
+          <!-- Left side: Method + Status + Slip -->
+          <div>
+            <p><strong>Method:</strong> <span class="text-gray-700">{{ payment.method|capfirst }}</span></p>
+            <p><strong>Status:</strong> <span class="text-gray-700">{{ payment.status|capfirst }}</span></p>
+
+            {% if payment.transaction_ref %}
+              <div class="mt-6">
+                <p class="text-gray-500 text-sm mb-2">Uploaded Slip:</p>
+                <img src="{{ payment.transaction_ref.url }}" alt="Payment Slip"
+                     class="w-64 rounded-lg border border-gray-200 shadow-sm">
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Right side: QR code or Bank info -->
+          <div class="flex flex-col items-center md:items-end">
+            {% if payment.method == "qr" %}
+              <div class="text-center md:text-right">
+                <p class="text-gray-500 text-sm mb-2">Scan this QR code to pay:</p>
+                <img src="{{ bank.qr_image.url }}" alt="QR Code"
+                     class="w-56 rounded-xl border border-gray-200 shadow-md">
+              </div>
+
+            {% elif payment.method == "transfer" %}
+              <div class="text-gray-700 space-y-1 md:text-right">
+                <p><strong>Bank:</strong> {{ bank.bank_name }}</p>
+                <p><strong>Account Number:</strong> {{ bank.account_number }}</p>
+                <p><strong>Account Name:</strong> {{ bank.account_name }}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <p class="text-gray-500">No payment record yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <form method="POST" class="flex flex-col sm:flex-row gap-4 justify-center">
+      {% csrf_token %}
+
+      {% if order.status == "in_progress" %}
+        <button type="submit" name="action" value="confirm_complete"
+                class="flex-1 bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold text-white transition">
+          ✅ Confirm Complete
+        </button>
+      {% endif %}
+
+      {% if order.status == "pending" and user.id == order.client.id %}
+        {% if order.payment.status == "pending" or order.payment.status == "paid" %}
+          <button type="submit" name="action" value="cancel_order"
+                  class="flex-1 bg-red-600 hover:bg-red-700 py-3 rounded-lg font-semibold text-white transition"
+                  onclick="return confirm('Are you sure you want to cancel this order?')">
+            ❌ Cancel Order
+          </button>
+        {% endif %}
+      {% endif %}
+      {%if perms.service.add_order %}  
+        <a href="{% url 'order_list' %}"
+          class="flex-1 text-center bg-gray-100 hover:bg-gray-200 py-3 rounded-lg font-semibold text-gray-700 transition">
+          Back to My Orders
+        </a>
+      {% endif %}
+    </form>
+  </div>
+</main>
+{% endblock %}

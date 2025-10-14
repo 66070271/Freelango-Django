@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Upload Service — Freelango{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<main class="w-full flex justify-center py-28 px-6">
+  <div class="max-w-3xl w-full rounded-2xl border border-gray-200 bg-white shadow-md p-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Edit Your Service</h1>
+    <p class="text-gray-600 text-center mb-10">
+      แชร์บริการของคุณให้ลูกค้าเห็น และเริ่มสร้างรายได้ในจักรวาลของ Freelango🚀
+    </p>
+
+    <!-- 🔹 ฟอร์ม Upload Service -->
+    <form action="{% url 'edit_service' service.id %}" method="post" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Service Title -->
+      <div>
+        <label class="block text-sm mb-1 text-gray-700 font-medium">Service Title</label>
+        {{ form.title }}
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label class="block text-sm mb-1 text-gray-700 font-medium">Price (USD)</label>
+        {{ form.price }}
+        {% if form.price.errors %}
+          {% for error in form.price.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Delivery Time -->
+      <div>
+        <label class="block text-sm mb-1 text-gray-700 font-medium">Delivery Time (days)</label>
+        {{ form.delivery_time }}
+        {% if form.delivery_time.errors %}
+          {% for error in form.delivery_time.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm mb-1 text-gray-700 font-medium">Description</label>
+        {{ form.description }}
+      </div>
+
+      <!-- Category -->
+      <div>
+        <label class="block text-sm mb-1 text-gray-700 font-medium">Category</label>
+        {{ form.categories }}
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-6">
+        <button type="submit"
+          class="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-md transition active:scale-[.98]">
+          Upload Service
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}
