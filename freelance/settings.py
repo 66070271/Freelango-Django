@@ -8,7 +8,7 @@ STATICFILES_DIRS = [
 
 # --- Media / Static ---
 # MEDIA_ROOT ไม่ต้องใช้แล้วเมื่อเก็บบน S3
-MEDIA_URL = '/media/'
+
 
 SECRET_KEY = 'django-insecure-vbd+u*fglzff8sr1&*t&k#y6kjtbfnj@ncw--5cqpmkrfgoi0%'
 DEBUG = True
