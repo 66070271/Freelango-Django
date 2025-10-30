@@ -82,6 +82,8 @@ STATIC_LOCATION = 'static'
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 STATICFILES_STORAGE = 'freelance.storages_backends.StaticStorage'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # --- Media files ---
 MEDIA_LOCATION = 'media'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
