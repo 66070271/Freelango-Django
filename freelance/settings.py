@@ -74,7 +74,7 @@ USE_TZ = True
 
 # === AWS S3 CONFIG ===
 AWS_STORAGE_BUCKET_NAME = 'mart-django-bucket'   # ✅ ใช้ชื่อ bucket จริง
-AWS_S3_REGION_NAME = 'ap-southeast-1'            # ✅ ตรวจ region ใน S3 console ด้วย
+AWS_S3_REGION_NAME = 'us-east-1'            # ✅ ตรวจ region ใน S3 console ด้วย
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
