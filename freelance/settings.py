@@ -2,7 +2,9 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR.parent, "static"),  # ⬅️ ตรงนี้คือโฟลเดอร์ static ที่อยู่นอกโปรเจกต์
+]
 # --- Media / Static ---
 # MEDIA_ROOT ไม่ต้องใช้แล้วเมื่อเก็บบน S3
 MEDIA_URL = '/media/'
