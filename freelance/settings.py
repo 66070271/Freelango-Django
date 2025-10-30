@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'freelance.wsgi.application'
 DATABASES={
     "default": {
     "ENGINE": "django.db.backends.postgresql",
-    "NAME": "freelance",
+    "NAME": "mydb",
     "USER": "postgres",
-    "PASSWORD": "password",
-    "HOST": "localhost",
+    "PASSWORD": "MyDbPass123!",
+    "HOST": "project-db.cnrqorc6ypjd.us-east-1.rds.amazonaws.com",
     "PORT": "5432",
  }
  }
