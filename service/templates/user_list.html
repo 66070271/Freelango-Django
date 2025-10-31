@@ -76,7 +76,7 @@
               {% endif %}
 
               <!-- Delete (only if user has permission) -->
-              {% if perms.service.delete_user %}
+              {% if perms.auth.delete_user %}
                 {% if user.groups.first.name == "Client" or user.groups.first.name == "Freelancer" %}
                 <form action="{% url 'delete_user' user.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
                     {% csrf_token %}
