@@ -202,7 +202,7 @@ def confirm_work(request,pk):
 
 @permission_required("service.view_order")
 def order_list(request):
-    orders = Order.objects.filter(client = request.user)
+    orders = Order.objects.filter(client = request.user).order_by('-updated_at')
     return render(request,"order_list.html",{"orders":orders})
 
 @permission_required("service.view_order")
