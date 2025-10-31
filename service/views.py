@@ -318,7 +318,7 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
 
     return render(request, 'change_password.html', {'form': form})
-@permission_required("service.change_user")
+@permission_required("auth.change_user")
 def user_list(request):
     query = request.GET.get("q", "")
     users = User.objects.all()
