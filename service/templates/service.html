@@ -22,7 +22,7 @@
         Manage Orders
       </a>
     {% endif %}
-    {% if perms.service.delete_user %} 
+    {% if perms.auth.delete_user %} 
       <a href="{% url 'user_list'%}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">
         Manage Users
       </a>
