@@ -331,7 +331,7 @@ def user_list(request):
             | Q(groups__name__icontains=query)
         ).distinct()
     return render(request, "user_list.html", {"users": users})
-@permission_required("service.delete_user", raise_exception=True)
+@permission_required("auth.delete_user", raise_exception=True)
 def delete_user(request, pk):
     user = User.objects.get(pk=pk)
     if request.method == "POST":
