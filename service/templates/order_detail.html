@@ -92,12 +92,6 @@
     <form method="POST" class="flex flex-col sm:flex-row gap-4 justify-center">
       {% csrf_token %}
 
-      {% if order.status == "in_progress" %}
-        <button type="submit" name="action" value="confirm_complete"
-                class="flex-1 bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold text-white transition">
-          ✅ Confirm Complete
-        </button>
-      {% endif %}
 
       {% if order.status == "pending" and user.id == order.client.id %}
         {% if order.payment.status == "pending" or order.payment.status == "paid" %}
